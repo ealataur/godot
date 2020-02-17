@@ -1,0 +1,4 @@
+#!/bin/bash
+export ANDROID_HOME=/Users/ilfiron/Library/Android/sdk
+export ANDROID_NDK_ROOT=/Users/ilfiron/Library/Android/sdk/ndk-bundle
+
