@@ -30,12 +30,14 @@
 
 #include "ios.h"
 #include <sys/sysctl.h>
+#include "os_iphone.h"
 
 #import <UIKit/UIKit.h>
 
 void iOS::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("get_rate_url", "app_id"), &iOS::get_rate_url);
+	ClassDB::bind_method(D_METHOD("get_push_token"), &iOS::get_push_token);
 };
 
 void iOS::alert(const char *p_alert, const char *p_title) {
@@ -43,8 +45,19 @@ void iOS::alert(const char *p_alert, const char *p_title) {
 	[alert show];
 }
 
+String iOS::get_push_token() const {
+	return OSIPhone::get_singleton()->get_push_token();
+}
+
 String iOS::get_model() const {
 	// [[UIDevice currentDevice] model] only returns "iPad" or "iPhone".
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+		return String("iPhone");
+	}
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+		return String("iPad");
+	}
+
 	size_t size;
 	sysctlbyname("hw.machine", NULL, &size, NULL, 0);
 	char *model = (char *)malloc(size);

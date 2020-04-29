@@ -36,7 +36,7 @@
 class iOS : public Object {
 
 	GDCLASS(iOS, Object);
-
+	const char *push_token;
 	static void _bind_methods();
 
 public:
@@ -44,6 +44,7 @@ public:
 
 	String get_model() const;
 	String get_rate_url(int p_app_id) const;
+	String get_push_token() const;
 
 	iOS();
 };

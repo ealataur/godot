@@ -39,6 +39,10 @@
 #import "GameController/GameController.h"
 #import <AudioToolbox/AudioServices.h>
 
+#ifdef PUSH_MSGS_ENABLED
+#import "thirdparty/onesignal/OneSignal.h"
+#endif
+
 #define kFilteringFactor 0.1
 #define kRenderingFrequency 60
 #define kAccelerometerFrequency 100.0 // Hz
@@ -610,6 +614,8 @@ static int frame_count = 0;
 };
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+
+
 	CGRect rect = [[UIScreen mainScreen] bounds];
 
 	is_focus_out = false;
@@ -681,6 +687,29 @@ static int frame_count = 0;
 	// prevent to stop music in another background app
 	[[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:nil];
 
+#ifdef PUSH_MSGS_ENABLED
+    // Register for remote notifications.
+    // [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
+    // NSLog(@"REQUEST DEVICE TOKEN");
+    // [application registerForRemoteNotifications];
+    //Remove this method to stop OneSignal Debugging  
+	[OneSignal setLogLevel:ONE_S_LL_VERBOSE visualLevel:ONE_S_LL_NONE];
+
+	//START OneSignal initialization code
+	[OneSignal initWithLaunchOptions:launchOptions
+		appId:@"df530710-1f4b-4985-a3cd-7be9d7b2d753"
+		handleNotificationAction:nil
+		settings:@{kOSSettingsKeyAutoPrompt: @false, kOSSettingsKeyInAppLaunchURL: @false}
+	];
+	OneSignal.inFocusDisplayType = OSNotificationDisplayTypeNotification;
+
+	// The promptForPushNotificationsWithUserResponse function will show the iOS push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission (See step 6)
+	[OneSignal promptForPushNotificationsWithUserResponse:^(BOOL accepted) {
+		NSLog(@"User accepted notifications: %d", accepted);
+	}];
+	//END OneSignal initializataion code
+#endif
+
 	return TRUE;
 };
 
@@ -727,6 +756,24 @@ static int frame_count = 0;
 - (void)applicationDidBecomeActive:(UIApplication *)application {
 	on_focus_in(view_controller, &is_focus_out);
 }
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    // NSLog(@"DEVICE TOKEN: %@", deviceToken);
+	NSUInteger dataLength = [deviceToken length];
+	const unsigned char *dataBytes = (unsigned char *)[deviceToken bytes];
+
+	OSIPhone::get_singleton()->set_push_token(dataBytes, dataLength);
+}
+
+- (void)application:(UIApplication *)app
+        didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
+    // The token is not currently available.
+    NSLog(@"DEVICE TOKEN: Remote notification support is unavailable due to error: %@", err);
+}
+
+// - (NSString *)get_push_token {
+// 	return push_token;
+// }
 
 - (void)dealloc {
 	[window release];

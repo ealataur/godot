@@ -673,6 +673,14 @@ OSIPhone::OSIPhone(int width, int height, String p_data_dir) {
 	AudioDriverManager::add_driver(&audio_driver);
 };
 
+void OSIPhone::set_push_token(const unsigned char *token, int size) {
+	push_token = push_token.hex_encode_buffer(token, size);
+}
+
+String OSIPhone::get_push_token() const {
+	return push_token;
+}
+
 OSIPhone::~OSIPhone() {
 }
 

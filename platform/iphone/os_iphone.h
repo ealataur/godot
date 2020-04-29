@@ -117,8 +117,11 @@ private:
 	int virtual_keyboard_height;
 
 	int video_driver_index;
+	String push_token;
 
 public:
+	void set_push_token(const unsigned char *token, int size);
+	String get_push_token() const;
 	bool iterate();
 
 	uint8_t get_orientations() const;
