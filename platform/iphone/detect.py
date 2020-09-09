@@ -26,6 +26,7 @@ def get_opts():
         BoolVariable('game_center', 'Support for game center', True),
         BoolVariable('store_kit', 'Support for in-app store', True),
         BoolVariable('icloud', 'Support for iCloud', True),
+        BoolVariable('camera_ios', 'Support for camera capture', False),
         BoolVariable('ios_exceptions', 'Enable exceptions', False),
         BoolVariable('onesignal_push', 'Enable OneSignal Push Messages', False),
         ('ios_triple', 'Triple for ios toolchain', ''),
@@ -172,6 +173,9 @@ def configure(env):
 
     if env['onesignal_push']:
         env.Append(CPPDEFINES=['PUSH_MSGS_ENABLED'])
+
+    if env['camera_ios']:
+        env.Append(CPPDEFINES=['CAMERA_IOS_ENABLED'])
 
     env.Prepend(CPPPATH=['$IPHONESDK/usr/include',
                          '$IPHONESDK/System/Library/Frameworks/OpenGLES.framework/Headers',
