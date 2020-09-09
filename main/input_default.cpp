@@ -351,7 +351,7 @@ void InputDefault::_parse_input_event_impl(const Ref<InputEvent> &p_event, bool 
 				}
 			}
 
-			if (translate) {
+			if (true) {
 				Ref<InputEventMouseButton> button_event;
 				button_event.instance();
 
@@ -379,7 +379,7 @@ void InputDefault::_parse_input_event_impl(const Ref<InputEvent> &p_event, bool 
 		track.update(sd->get_relative());
 		sd->set_speed(track.speed);
 
-		if (emulate_mouse_from_touch && sd->get_index() == mouse_from_touch_index) {
+		if (emulate_mouse_from_touch) { //&& sd->get_index() == mouse_from_touch_index) {
 
 			Ref<InputEventMouseMotion> motion_event;
 			motion_event.instance();

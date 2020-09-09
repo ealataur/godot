@@ -697,7 +697,7 @@ static int frame_count = 0;
 
 	//START OneSignal initialization code
 	[OneSignal initWithLaunchOptions:launchOptions
-		appId:@"df530710-1f4b-4985-a3cd-7be9d7b2d753"
+		appId:@"51cd9e4e-e223-4d94-8bf3-6bb95074d028"
 		handleNotificationAction:nil
 		settings:@{kOSSettingsKeyAutoPrompt: @false, kOSSettingsKeyInAppLaunchURL: @false}
 	];
